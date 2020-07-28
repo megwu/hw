@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -99,6 +100,20 @@ public class EmployeeController {
 			return "failed: " + result;
 		}
 		
+	}
+	
+	@RequestMapping(value="/page/{page}", method=RequestMethod.GET)
+	@ResponseBody
+	public Page<Employee> getAll(@PathVariable Integer page){
+		System.out.println("page = " + page);
+		return employeeService.findAll(page);
+	}
+	
+	@RequestMapping(value="/search", method=RequestMethod.POST)
+	@ResponseBody
+	public List<Employee> getEmployees(Employee employee){
+		System.out.println("got parameter employee = " + employee.toString());
+		return employeeService.search(employee);
 	}
 	
 }

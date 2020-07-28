@@ -46,6 +46,23 @@ public class Employee {
 	@Temporal(TemporalType.DATE)
 	private Date txtm;
 	
+	private String deptName;
+	
+	public Employee(){}
+	
+	public Employee(Integer id, String name, String deptId, String deptName, String sex, String tel, String addr, String age, Date gftm, Date txtm) {
+		this.id = id;
+		this.name = name;
+		this.deptId = deptId;
+		this.deptName = deptName;
+		this.sex = sex;
+		this.tel = tel;
+		this.addr = addr;
+		this.age = age;
+		this.gftm = gftm;
+		this.txtm = txtm;
+	}
+	
 	/** 員工編號 */
 	public Integer getId() {
 		return this.id;
@@ -125,6 +142,15 @@ public class Employee {
 	/** 最後編修時間 */
 	public void setTxtm(Date txtm) {
 		this.txtm = txtm;
+	}
+	
+	/** 部門 Name */
+	public String getDeptName() {
+		return this.deptName;
+	}
+	/** 部門 Name */
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
 	
 	@Override

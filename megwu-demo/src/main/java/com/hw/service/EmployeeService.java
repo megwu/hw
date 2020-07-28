@@ -4,8 +4,17 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.hw.entity.Employee;
 import com.hw.repository.EmployeeRepository;
@@ -92,4 +101,70 @@ public class EmployeeService {
 		}
 	}
 	
+	/**
+	 * Search Employee's Data
+	 * @param employee
+	 * @return
+	 */
+	public List<Employee> search(final Employee employee) {
+		return employeeRepository.fetchEmpDeptDataInnerJoin(new Specification<Employee>() {
+			@Override
+			public Predicate toPredicate(Root<Employee> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				
+				Predicate stuNameLike = null;
+				if(null != employee && !StringUtils.isEmpty(employee.getName())) {
+					stuNameLike = cb.like(root.<String> get("name"), "%" + employee.getName() + "%");
+				}
+				
+				Predicate clazzNameLike = null;
+				if(null != employee && !StringUtils.isEmpty(employee.getName())) {
+					clazzNameLike = cb.like(root.<String> get("name"), "%" + employee.getName() + "%");
+				}
+				
+				if(null != stuNameLike) query.where(stuNameLike);
+					if(null != clazzNameLike) query.where(clazzNameLike);
+						return null;
+				}
+			//}, new PageRequest.of(1, 10, Sort.by(Sort.Direction.DESC, "id")));
+		});
+	}
+	
+//	private EntityManager em ;
+//    @SuppressWarnings("unchecked")
+//	
+//    public List<Employee> search(Employee user) {
+//        //String dataSql = "select t from User t where 1 = 1";
+//    	String dataSql = "SELECT new com.hw.entity.Employee(e.id, e.name, e.deptId, d.name as deptName, e.sex, e.tel"
+//			+ ", e.addr, e.age, e.gftm, e.txtm) "
+//			+ "FROM t_employee e, t_department d where d.id = e.deptId";
+//        String countSql = "select count(t) from t_employee t where 1 = 1";
+//        
+//        if(null != user && !StringUtils.isEmpty(user.getName())) {
+//            dataSql += " and t.name = ?1";
+//            countSql += " and t.name = ?1";
+//        }
+//        
+//        Query dataQuery = em.createQuery(dataSql);
+//        Query countQuery = em.createQuery(countSql);
+//        
+//        if(null != user && !StringUtils.isEmpty(user.getName())) {
+//            dataQuery.setParameter(1, user.getName());
+//            countQuery.setParameter(1, user.getName());
+//        }long totalSize = (long) countQuery.getSingleResult();
+//        System.err.println("totalSize = " + totalSize);
+//        return dataQuery.getResultList();
+//    }
+	
+//	public List<Employee> search() {
+//		return employeeRepository.fetchEmpDeptDataInnerJoin();
+//	}
+	
+	/**
+	 * Query Employee by page
+	 * @param page
+	 * @return
+	 */
+	public Page<Employee> findAll(int page) {
+	    return employeeRepository.findAll(PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.ASC, "id")));
+	}
 }
