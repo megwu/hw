@@ -11,6 +11,7 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+//員工資料表
 @Entity(name="t_employee")
 public class Employee {
 	// 員工編號
